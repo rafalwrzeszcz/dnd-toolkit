@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package rpg;
+
+service Audio {
+    rpc Play (PlayRequest) returns (PlayResponse);
+}
+
+message PlayRequest {
+    string track = 1;
+}
+
+message PlayResponse {}

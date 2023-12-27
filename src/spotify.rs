@@ -1,23 +1,35 @@
-use dbus::blocking::Connection;
+use async_trait::async_trait;
 use dbus::channel::Sender;
 use dbus::message::Message;
-
+use dbus::nonblock::SyncConnection;
+use dbus_tokio::connection::new_session_sync;
+use std::sync::Arc;
+use tokio::spawn;
 use crate::audio::Audio;
 
 pub struct Spotify {
-    dbus: Connection,
+    dbus: Arc<SyncConnection>,
 }
 
 impl Spotify {
     pub fn new() -> Self {
+        let (resource, conn) = new_session_sync().unwrap();
+
+        // TODO
+        spawn(async {
+            let err = resource.await;
+            panic!("Lost connection to D-Bus: {}", err);
+        });
+
         Self {
-            dbus: Connection::new_session().unwrap(), // TODO
+            dbus: conn, // TODO
         }
     }
 }
 
+#[async_trait]
 impl Audio for Spotify {
-    fn play(&self, track: String) {
+    async fn play(&self, track: String) {
         let call = Message::call_with_args(
             "org.mpris.MediaPlayer2.spotify",
             "/org/mpris/MediaPlayer2",
@@ -26,6 +38,6 @@ impl Audio for Spotify {
             (track,),
         );
 
-        self.dbus.send(call); // TODO
+        &self.dbus.send(call); // TODO
     }
 }

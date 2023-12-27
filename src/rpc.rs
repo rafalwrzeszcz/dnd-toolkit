@@ -1,6 +1,7 @@
-use std::cell::RefCell;
-use tokio::runtime::Runtime;
-use tonic::{include_proto, Request};
+use async_trait::async_trait;
+use std::sync::Arc;
+use tokio::sync::Mutex;
+use tonic::{include_proto, Request, Response, Status};
 use tonic::transport::Channel;
 
 use crate::audio::Audio;
@@ -8,61 +9,49 @@ use crate::audio::Audio;
 include_proto!("rpg");
 
 pub struct Rpc {
-    audio: RefCell<audio_client::AudioClient<Channel>>,
-    runtime: Runtime,
+    audio: Arc<Mutex<audio_client::AudioClient<Channel>>>,
 }
 
 impl Rpc {
-    pub fn new() -> Self {
-        let runtime = Runtime::new().unwrap();
-        
+    pub async fn new() -> Self {
         Self {
-            audio: RefCell::new(runtime.block_on(audio_client::AudioClient::connect("http://127.0.0.1:50051")).unwrap()), // TODO
-            runtime,
+            audio: Arc::new(Mutex::new(audio_client::AudioClient::connect("http://127.0.0.1:50051").await.unwrap())), // TODO
         }
     }
 }
 
+#[async_trait]
 impl Audio for Rpc {
-    fn play(&self, track: String) {
+    async fn play(&self, track: String) {
         let call = Request::new(PlayRequest {
             track,
         });
 
-        self.runtime.block_on(self.audio.borrow_mut().play(call)); // TODO
+        self.audio.clone().lock().await.play(call).await; // TODO
     }
 }
 
 // TODO: listener to separate file
 
 pub struct Listener<T: Audio> {
-    audio: std::sync::Arc<std::sync::Mutex<T>>,
+    audio: Arc<Mutex<T>>,
 }
 
 impl<T: Audio> Listener<T> {
     pub fn new(audio: T) -> Self {
         Self {
-            audio: std::sync::Arc::new(std::sync::Mutex::new(audio)),
+            audio: Arc::new(Mutex::new(audio)),
         }
     }
 }
 
-#[tonic::async_trait]
+#[async_trait]
 impl<T: Audio + std::marker::Send + 'static> audio_server::Audio for Listener<T> {
-    async fn play(&self, request: Request<PlayRequest>) -> Result<tonic::Response<PlayResponse>, tonic::Status> {
-        println!("{:?}", request);
-        self.audio.clone().lock().unwrap().play(request.into_inner().track);
-        Ok(tonic::Response::new(PlayResponse {}))
+    async fn play(&self, request: Request<PlayRequest>) -> Result<Response<PlayResponse>, Status> {
+        self.audio.clone().lock().await.play(request.into_inner().track).await;
+        Ok(Response::new(PlayResponse {}))
         // TODO
     }
 }
 
-/* TODO: rest? *rpc?
-pub struct Remote {
-    // TODO
-}
-
-impl Audio for Remote {
-    // TODO
-}
-*/
+/* TODO: rpc -> Remote */

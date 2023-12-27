@@ -1,3 +1,6 @@
+use async_trait::async_trait;
+
+#[async_trait]
 pub trait Audio {
-    fn play(&self, track: String);
+    async fn play(&self, track: String);
 }

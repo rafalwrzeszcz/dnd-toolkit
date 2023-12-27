@@ -37,6 +37,7 @@ mod spotify;
 mod void;
 
 use chrono::naive::NaiveDate;
+use tokio::main as tokio_main;
 
 use crate::audio::Audio;
 use crate::spotify::Spotify;
@@ -57,12 +58,13 @@ fn display_map() {
     // TODO
 }
 
-fn play_audio<T: Audio>(audio: &T) {
-    audio.play("spotify:user:1188797644:playlist:7BkG8gSv69wibGNU2imRMx".into());
+async fn play_audio<T: Audio>(audio: &T) {
+    audio.play("spotify:user:1188797644:playlist:7BkG8gSv69wibGNU2imRMx".into()).await;
     // TODO
 }
 
-fn main() {
+#[tokio_main]
+async fn main() {
     let game = Game {
         party_name: "Wesoła Kompanija".into(),
         date: NaiveDate::from_ymd_opt(2024, 1, 5).unwrap(), // TODO
@@ -76,20 +78,15 @@ fn main() {
     println!("{}", game.game_master.name);
 
     //let audio = Spotify::new();
-    let audio = Void {};
+    //let audio = Void {};
 
     display_map();
 
     // rpc-client
-    // tokio::runtime::Runtime::new().unwrap().block_on(async {
-    // std::thread::spawn(|| {
-    // let audio = Rpc::new();
-    play_audio(&audio);
-    // }).join();
-    // })
+    let audio = Rpc::new().await;
+    play_audio(&audio).await;
     
     // rpc-server
-    // tokio::runtime::Runtime::new().unwrap().block_on(async {
     // let (sender, receiver) = tokio::sync::oneshot::channel::<()>();
     // let handler = crate::rpc::Listener::new(Spotify::new());
     // let server = tonic::transport::Server::builder()
@@ -97,5 +94,4 @@ fn main() {
     //     .serve_with_shutdown("127.0.0.1:50051".parse().unwrap(), async { drop(receiver.await) });
     // //sender.send(()).unwrap();
     // server.await;
-    // })
 }

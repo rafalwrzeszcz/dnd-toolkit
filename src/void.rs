@@ -1,8 +1,11 @@
+use async_trait::async_trait;
+
 use crate::audio::Audio;
 
 pub struct Void {
 }
 
+#[async_trait]
 impl Audio for Void {
-    fn play(&self, _track: String) {}
+    async fn play(&self, _track: String) {}
 }

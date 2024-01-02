@@ -1,7 +1,6 @@
 /* TODO:
 
 results
-async
 
 campaign
 
@@ -10,8 +9,6 @@ game session objects
 player
 
 character
-
-local and over network
 
 cli interface
 web interface
@@ -29,6 +26,11 @@ npc
 initiative list
 
 config file
+
+cargo make
+tests
+docs
+logging
 */
 
 mod audio;
@@ -37,6 +39,8 @@ mod spotify;
 mod void;
 
 use chrono::naive::NaiveDate;
+use env_logger::Builder;
+use log::info;
 use tokio::main as tokio_main;
 
 use crate::audio::Audio;
@@ -65,6 +69,8 @@ async fn play_audio<T: Audio>(audio: &T) {
 
 #[tokio_main]
 async fn main() {
+    Builder::from_default_env().init();
+
     let game = Game {
         party_name: "Wesoła Kompanija".into(),
         date: NaiveDate::from_ymd_opt(2024, 1, 5).unwrap(), // TODO
@@ -73,9 +79,9 @@ async fn main() {
         },
     };
 
-    println!("{}", game.party_name);
-    println!("{}", game.date);
-    println!("{}", game.game_master.name);
+    info!("{}", game.party_name);
+    info!("{}", game.date);
+    info!("{}", game.game_master.name);
 
     //let audio = Spotify::new();
     //let audio = Void {};

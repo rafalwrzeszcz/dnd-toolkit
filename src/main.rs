@@ -1,6 +1,11 @@
 /* TODO:
 
-results
+config file
+
+cargo make
+tests
+docs
+switch coverage to grcov
 
 campaign
 
@@ -16,7 +21,7 @@ native device display
 mobile app
 
 map
-audio (local, over network, spotify - qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.OpenUri spotify:track:1WNPappMd13lY5o9POZ4gU)
+audio (document, think about tests)
 tokens
 log
 script
@@ -24,13 +29,6 @@ scene
 monster
 npc
 initiative list
-
-config file
-
-cargo make
-tests
-docs
-logging
 */
 
 mod audio;
@@ -83,13 +81,13 @@ async fn main() {
     info!("{}", game.date);
     info!("{}", game.game_master.name);
 
-    //let audio = Spotify::new();
+    //let audio = Spotify::new().unwrap();
     //let audio = Void {};
 
     display_map();
 
     // rpc-client
-    let audio = Rpc::new().await;
+    let audio = Rpc::new("http://127.0.0.1:50051".to_string()).await.unwrap();
     play_audio(&audio).await;
     
     // rpc-server

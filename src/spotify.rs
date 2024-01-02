@@ -1,35 +1,40 @@
 use async_trait::async_trait;
+use dbus::Error as DbusError;
 use dbus::channel::Sender;
 use dbus::message::Message;
 use dbus::nonblock::SyncConnection;
 use dbus_tokio::connection::new_session_sync;
+use log::{debug, error, info};
 use std::sync::Arc;
 use tokio::spawn;
-use crate::audio::Audio;
+use crate::audio::{Audio, AudioError};
 
 pub struct Spotify {
     dbus: Arc<SyncConnection>,
 }
 
 impl Spotify {
-    pub fn new() -> Self {
-        let (resource, conn) = new_session_sync().unwrap();
+    pub fn new() -> Result<Self, DbusError> {
+        let (resource, conn) = new_session_sync()?;
 
-        // TODO
         spawn(async {
+            // TODO: reconnect?
             let err = resource.await;
+            error!("D-Bus connection lost.");
             panic!("Lost connection to D-Bus: {}", err);
         });
 
-        Self {
-            dbus: conn, // TODO
-        }
+        Ok(Self {
+            dbus: conn,
+        })
     }
 }
 
 #[async_trait]
 impl Audio for Spotify {
-    async fn play(&self, track: String) {
+    async fn play(&self, track: String) -> Result<(), AudioError> {
+        info!(target: "audio:spotify", "Playing {}", track);
+
         let call = Message::call_with_args(
             "org.mpris.MediaPlayer2.spotify",
             "/org/mpris/MediaPlayer2",
@@ -38,6 +43,9 @@ impl Audio for Spotify {
             (track,),
         );
 
-        &self.dbus.send(call); // TODO
+        if let Err(()) = &self.dbus.send(call) {
+            return Err(AudioError::PlayError);
+        }
+        Ok(())
     }
 }

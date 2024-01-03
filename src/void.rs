@@ -2,8 +2,7 @@ use async_trait::async_trait;
 
 use crate::audio::{Audio, AudioError};
 
-pub struct Void {
-}
+pub struct Void {}
 
 #[async_trait]
 impl Audio for Void {

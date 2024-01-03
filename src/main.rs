@@ -1,7 +1,5 @@
 /* TODO:
 
-do we need arc+mutexes everywhere
-
 cargo make
 tests
 docs
@@ -44,14 +42,14 @@ use std::convert::From;
 use std::ops::Deref;
 use std::sync::Arc;
 use tokio::main as tokio_main;
-use tokio::sync::Mutex;
+use tokio::sync::oneshot::channel;
 use tonic::transport::Server;
 
-use crate::audio::Audio;
-use crate::config::{AudioConfig, GameMasterConfig, load_from_file};
-use crate::spotify::Spotify;
-use crate::rpc::{Listener, Rpc};
+use crate::audio::{Audio, AudioError};
+use crate::config::{load_from_file, AudioConfig, GameMasterConfig};
 use crate::rpc::audio_server::AudioServer;
+use crate::rpc::{Listener, Rpc};
+use crate::spotify::Spotify;
 use crate::void::Void;
 
 struct GameMaster {
@@ -60,9 +58,7 @@ struct GameMaster {
 
 impl From<GameMasterConfig> for GameMaster {
     fn from(source: GameMasterConfig) -> Self {
-        Self {
-            name: source.name,
-        }
+        Self { name: source.name }
     }
 }
 
@@ -76,9 +72,10 @@ fn display_map() {
     // TODO
 }
 
-async fn play_audio(audio: &dyn Audio) {
-    audio.play("spotify:user:1188797644:playlist:7BkG8gSv69wibGNU2imRMx".into()).await;
-    // TODO
+async fn play_audio(audio: &dyn Audio) -> Result<(), AudioError> {
+    audio
+        .play("spotify:user:1188797644:playlist:7BkG8gSv69wibGNU2imRMx".into())
+        .await
 }
 
 #[tokio_main]
@@ -97,13 +94,13 @@ async fn main() {
     info!("{}", game.date);
     info!("{}", game.game_master.name);
 
-    let audio: Arc<Mutex<dyn Audio + Sync + Send + 'static>> = match config.audio {
-        AudioConfig::Void => Arc::new(Mutex::new(Void {})),
-        AudioConfig::Spotify => Arc::new(Mutex::new(Spotify::new().unwrap())), // TODO
-        AudioConfig::Rpc { url } => Arc::new(Mutex::new(Rpc::new(url).await.unwrap())), // TODO
+    let audio: Arc<dyn Audio + Send + Sync + 'static> = match config.audio {
+        AudioConfig::Void => Arc::new(Void {}),
+        AudioConfig::Spotify => Arc::new(Spotify::new().unwrap()), // TODO
+        AudioConfig::Rpc { url } => Arc::new(Rpc::new(url).await.unwrap()), // TODO
     };
 
-    let (sender, receiver) = tokio::sync::oneshot::channel::<()>();
+    let (sender, receiver) = channel::<()>();
 
     // rpc-server
     let rpc = config.rpc.map(|rpc_config| {
@@ -115,7 +112,7 @@ async fn main() {
 
     display_map();
 
-    play_audio(audio.clone().lock().await.deref()).await;
+    play_audio(audio.deref()).await.unwrap();
 
     if let Some(server) = rpc {
         server.await.unwrap(); // TODO

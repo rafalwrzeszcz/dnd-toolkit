@@ -1,13 +1,13 @@
+use crate::audio::{Audio, AudioError};
 use async_trait::async_trait;
-use dbus::Error as DbusError;
 use dbus::channel::Sender;
 use dbus::message::Message;
 use dbus::nonblock::SyncConnection;
+use dbus::Error as DbusError;
 use dbus_tokio::connection::new_session_sync;
 use log::{error, info};
 use std::sync::Arc;
 use tokio::spawn;
-use crate::audio::{Audio, AudioError};
 
 pub struct Spotify {
     dbus: Arc<SyncConnection>,
@@ -24,9 +24,7 @@ impl Spotify {
             panic!("Lost connection to D-Bus: {}", err);
         });
 
-        Ok(Self {
-            dbus: conn,
-        })
+        Ok(Self { dbus: conn })
     }
 }
 

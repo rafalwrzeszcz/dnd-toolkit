@@ -1,0 +1,12 @@
+{
+    "party_name": "Wesoła Kompanija",
+    "game_master": {
+        "name": "Rafał Wrzeszcz"
+    },
+    "audio": {
+        "type": "Spotify"
+    },
+    "rpc": {
+        "listen": "127.0.0.1:50051"
+    }
+}

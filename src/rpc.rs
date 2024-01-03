@@ -40,20 +40,20 @@ impl Audio for Rpc {
 
 // TODO: listener to separate file
 
-pub struct Listener<T: Audio> {
-    audio: Arc<Mutex<T>>,
+pub struct Listener {
+    audio: Arc<Mutex<dyn Audio + Sync + Send + 'static>>,
 }
 
-impl<T: Audio> Listener<T> {
-    pub fn new(audio: T) -> Self {
+impl Listener {
+    pub fn new(audio: Arc<Mutex<dyn Audio + Sync + Send + 'static>>) -> Self {
         Self {
-            audio: Arc::new(Mutex::new(audio)),
+            audio,
         }
     }
 }
 
 #[async_trait]
-impl<T: Audio + std::marker::Send + 'static> audio_server::Audio for Listener<T> {
+impl audio_server::Audio for Listener {
     async fn play(&self, request: Request<PlayRequest>) -> Result<Response<PlayResponse>, Status> {
         let request = request.into_inner();
 

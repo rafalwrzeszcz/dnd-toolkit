@@ -4,7 +4,7 @@ use dbus::channel::Sender;
 use dbus::message::Message;
 use dbus::nonblock::SyncConnection;
 use dbus_tokio::connection::new_session_sync;
-use log::{debug, error, info};
+use log::{error, info};
 use std::sync::Arc;
 use tokio::spawn;
 use crate::audio::{Audio, AudioError};

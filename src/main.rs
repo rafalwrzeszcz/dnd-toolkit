@@ -1,9 +1,9 @@
 /* TODO:
 
-cargo make
-tests
-docs
 switch coverage to grcov
+tests (config, rpc, audio)
+docs (general project, audio, config)
+tracing
 
 campaign
 
@@ -19,7 +19,6 @@ native device display
 mobile app
 
 map
-audio (document, think about tests)
 tokens
 log
 script

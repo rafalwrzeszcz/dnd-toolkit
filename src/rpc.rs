@@ -9,6 +9,8 @@ use crate::audio::{Audio, AudioError};
 
 include_proto!("rpg");
 
+// client side
+
 pub struct Rpc {
     audio: Mutex<audio_client::AudioClient<Channel>>,
 }
@@ -36,7 +38,7 @@ impl Audio for Rpc {
     }
 }
 
-// TODO: listener to separate file
+// service side
 
 pub struct Listener {
     audio: Arc<dyn Audio + Send + Sync + 'static>,

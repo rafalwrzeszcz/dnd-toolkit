@@ -1,2 +1,4 @@
 /target
 cobertura.xml
+*.profraw
+coverage.lcov

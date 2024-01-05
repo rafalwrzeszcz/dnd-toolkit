@@ -5,9 +5,9 @@ use dbus::message::Message;
 use dbus::nonblock::SyncConnection;
 use dbus::Error as DbusError;
 use dbus_tokio::connection::new_session_sync;
-use log::{error, info};
 use std::sync::Arc;
 use tokio::spawn;
+use tracing::{error, info};
 
 pub struct Spotify {
     dbus: Arc<SyncConnection>,

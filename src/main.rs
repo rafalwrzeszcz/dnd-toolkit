@@ -1,9 +1,7 @@
 /* TODO:
 
-switch coverage to grcov
 tests (config, rpc, audio)
 docs (general project, audio, config)
-tracing
 
 campaign
 
@@ -35,14 +33,14 @@ mod spotify;
 mod void;
 
 use chrono::naive::NaiveDate;
-use env_logger::Builder;
-use log::info;
 use std::convert::From;
 use std::ops::Deref;
 use std::sync::Arc;
 use tokio::main as tokio_main;
 use tokio::sync::oneshot::channel;
 use tonic::transport::Server;
+use tracing::info;
+use tracing_subscriber::fmt::init;
 
 use crate::audio::{Audio, AudioError};
 use crate::config::{load_from_file, AudioConfig, GameMasterConfig};
@@ -79,7 +77,7 @@ async fn play_audio(audio: &dyn Audio) -> Result<(), AudioError> {
 
 #[tokio_main]
 async fn main() {
-    Builder::from_default_env().init();
+    init();
 
     let config = load_from_file("config.json".into()).unwrap(); // TODO: config path from param, with default fallback
 

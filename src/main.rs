@@ -1,7 +1,6 @@
 /* TODO:
 
 tests (config, rpc, audio)
-docs (general project, audio, config)
 
 campaign
 
@@ -16,6 +15,7 @@ web interface
 native device display
 mobile app
 
+audio - chromecast (spotify app ID: CC32E753)
 map
 tokens
 log
@@ -34,7 +34,6 @@ mod void;
 
 use chrono::naive::NaiveDate;
 use std::convert::From;
-use std::ops::Deref;
 use std::sync::Arc;
 use tokio::main as tokio_main;
 use tokio::sync::oneshot::channel;
@@ -42,7 +41,7 @@ use tonic::transport::Server;
 use tracing::info;
 use tracing_subscriber::fmt::init;
 
-use crate::audio::{Audio, AudioError};
+use crate::audio::Audio;
 use crate::config::{load_from_file, AudioConfig, GameMasterConfig};
 use crate::rpc::audio_server::AudioServer;
 use crate::rpc::{Listener, Rpc};
@@ -63,16 +62,6 @@ struct Game {
     party_name: String,
     date: NaiveDate,
     game_master: GameMaster,
-}
-
-fn display_map() {
-    // TODO
-}
-
-async fn play_audio(audio: &dyn Audio) -> Result<(), AudioError> {
-    audio
-        .play("spotify:user:1188797644:playlist:7BkG8gSv69wibGNU2imRMx".into())
-        .await
 }
 
 #[tokio_main]
@@ -107,9 +96,10 @@ async fn main() {
             .serve_with_shutdown(rpc_config.listen, async { drop(receiver.await) })
     });
 
-    display_map();
-
-    play_audio(audio.deref()).await.unwrap();
+    audio
+        .play("spotify:user:1188797644:playlist:7BkG8gSv69wibGNU2imRMx".into())
+        .await
+        .unwrap();
 
     if let Some(server) = rpc {
         server.await.unwrap(); // TODO

@@ -10,12 +10,16 @@ player
 
 character
 
+workspace:
+server
 cli interface
-web interface
-native device display
+web interface (yew, dioxus)
+native device display (qt?, gtk?)
 mobile app
++commons
+tauri? instead of grpc?
 
-audio - chromecast (spotify app ID: CC32E753)
+audio - chromecast (spotify app ID: CC32E753 - https://github.com/azasypkin/rust-caster & https://github.com/aartek/spotify-chromecast-player)
 map
 tokens
 log

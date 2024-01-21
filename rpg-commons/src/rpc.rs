@@ -17,14 +17,14 @@ pub struct Rpc {
 }
 
 impl Rpc {
-    /// Configures gRPC client with URLs to specific nodes.
+    /// Configures gRPC client with URL to target nodes.
     ///
     /// # Arguments
     ///
-    /// * `audio_url` - RPC URL to node that will handle audio subsystem.
-    pub async fn new(audio_url: String) -> Result<Self, TonicError> {
+    /// * `url` - RPC URL to node that will handle audio subsystem.
+    pub async fn new(url: String) -> Result<Self, TonicError> {
         Ok(Self {
-            audio: Mutex::new(audio_client::AudioClient::connect(audio_url).await?),
+            audio: Mutex::new(audio_client::AudioClient::connect(url).await?),
         })
     }
 }

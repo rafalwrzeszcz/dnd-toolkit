@@ -10,12 +10,12 @@ expect anything of it. Not even to run (sometimes).
 Purpose of this project is not to create a new/next/another virtual tabletop solution. I play with friends in
 old-school way with paper, pencils, mini figs, etc. But of course good use of modern technology can elevate gaming
 experience. This software is not going to replace physical aspects of our RPG session, but enhance it by coordinating
-various multimedial boosters, like controlling audio playback.
+various multimedia boosters, like controlling audio playback.
 
-Main rule, while working on architectual and conteptual aspects is that this should be a thin integration layer, not
+Main rule, while working on architectural and conceptual aspects is that this should be a thin integration layer, not
 some uber-bundle capable of running on embedded systems controlling media devices and implementing audio codecs - I
 use Spotify to play my audio and all I want to implement is to integrate Spotify into the system to orchestrate it
-togetether with other aspects of our game scene. Same principle will apply to other subsystems - the goal is to
+together with other aspects of our game scene. Same principle will apply to other subsystems - the goal is to
 integrate existing software solutions/services not to write low-level replacements of these.
 
 ## Current features
@@ -31,7 +31,7 @@ Whenever possible, any subsystem will have a `Void` implementation that will sim
 corresponding aspects. For example setting audio driver to `Void` will make audio subsystem available, but will
 effectively make it muted regardless of hardware and other parts of the system. It will, whenever possible, handle
 operations gracefully, without failing. Will just do nothing and pretend it's done - you can think of it like your
-office coleague.
+office colleague.
 
 ## Configuration
 
@@ -53,7 +53,7 @@ command-line argument can be expected). Here is example structure of configurati
 ## Audio
 
 Currently only implemented handler for audio subsystem is `Spotify`. It uses D-Bus to send playback requests to local
-**Spotify** client. You need to have it installed and runnin for the driver to make any effect - otherwise it will not
+**Spotify** client. You need to have it installed and running for the driver to make any effect - otherwise it will not
 fail, but just send messages that will not be handled by any consumer, thus make no effect.
 
 ## gRPC setup
@@ -79,7 +79,7 @@ To configure any node to run gRPC listener add `"rpc"` configuration section:
 }
 ```
 
-To access any other node configure particular driver as `Rpc` pointint to that node, eg.:
+To access any other node configure particular driver as `Rpc` pointing to that node, e.g.:
 
 ```json
 {
@@ -100,9 +100,9 @@ another node, for example on laptop can run as a controller.
 ### Proxying
 
 Note, that it's possible to specify both `"rpc"` listener section and still forward some (or all) subsystems to `"Rpc"`
-driver type. There is simply no reason to forbid that in the code and it gives possibility to create something like a
+driver type. There is simply no reason to forbid that in the code, and it gives possibility to create something like a
 router node, you can think of exposing such router as unified gRPC endpoint through public connection or exposing
-single node to others who would like to use and and configure others transparently:
+single node to others who would like to use and configure others transparently:
 
 ![proxy-setup](./assets/toolkit-proxy.drawio.png)
 

@@ -1,72 +1,17 @@
-/* TODO:
-
-tests (config, rpc, audio)
-
-campaign
-
-game session objects
-
-player
-
-character
-
-workspace:
-server
-cli interface
-web interface (yew, dioxus)
-native device display (qt?, gtk?)
-mobile app
-+commons
-tauri? instead of grpc?
-
-audio - chromecast (spotify app ID: CC32E753 - https://github.com/azasypkin/rust-caster & https://github.com/aartek/spotify-chromecast-player)
-map
-tokens
-log
-script
-scene
-monster
-npc
-initiative list
-*/
-
-mod audio;
-mod config;
-mod rpc;
-mod spotify;
-mod void;
-
 use chrono::naive::NaiveDate;
-use std::convert::From;
 use std::sync::Arc;
 use tokio::main as tokio_main;
 use tokio::sync::oneshot::channel;
 use tonic::transport::Server;
 use tracing::info;
 use tracing_subscriber::fmt::init;
-
-use crate::audio::Audio;
-use crate::config::{load_from_file, AudioConfig, GameMasterConfig};
-use crate::rpc::audio_server::AudioServer;
-use crate::rpc::{Listener, Rpc};
-use crate::spotify::Spotify;
-use crate::void::Void;
-
-struct GameMaster {
-    name: String,
-}
-
-impl From<GameMasterConfig> for GameMaster {
-    fn from(source: GameMasterConfig) -> Self {
-        Self { name: source.name }
-    }
-}
-
-struct Game {
-    party_name: String,
-    date: NaiveDate,
-    game_master: GameMaster,
-}
+use rpg_commons::audio::Audio;
+use rpg_commons::config::{AudioConfig, load_from_file};
+use rpg_commons::game::Game;
+use rpg_commons::rpc::{Listener, Rpc};
+use rpg_commons::rpc::audio_server::AudioServer;
+use rpg_commons::spotify::Spotify;
+use rpg_commons::void::Void;
 
 #[tokio_main]
 async fn main() {
@@ -99,11 +44,6 @@ async fn main() {
             .add_service(AudioServer::new(handler))
             .serve_with_shutdown(rpc_config.listen, async { drop(receiver.await) })
     });
-
-    audio
-        .play("spotify:user:1188797644:playlist:7BkG8gSv69wibGNU2imRMx".into())
-        .await
-        .unwrap();
 
     if let Some(server) = rpc {
         server.await.unwrap(); // TODO

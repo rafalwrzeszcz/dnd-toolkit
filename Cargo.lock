@@ -856,6 +856,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c08c74e62047bb2de4ff487b251e4a92e24f48745648451635cec7d591162d9f"
 
 [[package]]
+name = "rpg-cli"
+version = "0.0.1"
+dependencies = [
+ "async-trait",
+ "chrono",
+ "dbus",
+ "dbus-tokio",
+ "prost",
+ "rpg-commons",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+ "tonic",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "rpg-commons"
 version = "0.0.1"
 dependencies = [
@@ -873,6 +892,57 @@ dependencies = [
  "tracing",
  "tracing-subscriber",
 ]
+
+[[package]]
+name = "rpg-dioxus"
+version = "0.0.1"
+dependencies = [
+ "rpg-commons",
+]
+
+[[package]]
+name = "rpg-gtk"
+version = "0.0.1"
+dependencies = [
+ "rpg-commons",
+]
+
+[[package]]
+name = "rpg-mobile"
+version = "0.0.1"
+dependencies = [
+ "rpg-commons",
+]
+
+[[package]]
+name = "rpg-qt"
+version = "0.0.1"
+dependencies = [
+ "rpg-commons",
+]
+
+[[package]]
+name = "rpg-server"
+version = "0.0.1"
+dependencies = [
+ "async-trait",
+ "chrono",
+ "dbus",
+ "dbus-tokio",
+ "prost",
+ "rpg-commons",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+ "tonic",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "rpg-yew"
+version = "0.0.1"
 
 [[package]]
 name = "rustc-demangle"

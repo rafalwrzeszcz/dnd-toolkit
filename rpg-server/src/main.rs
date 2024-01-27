@@ -1,17 +1,17 @@
 use chrono::naive::NaiveDate;
+use rpg_commons::audio::Audio;
+use rpg_commons::config::{load_from_file, AudioConfig};
+use rpg_commons::game::Game;
+use rpg_commons::rpc::audio_server::AudioServer;
+use rpg_commons::rpc::{Listener, Rpc};
+use rpg_commons::spotify::Spotify;
+use rpg_commons::void::Void;
 use std::sync::Arc;
 use tokio::main as tokio_main;
 use tokio::sync::oneshot::channel;
 use tonic::transport::Server;
 use tracing::info;
 use tracing_subscriber::fmt::init;
-use rpg_commons::audio::Audio;
-use rpg_commons::config::{AudioConfig, load_from_file};
-use rpg_commons::game::Game;
-use rpg_commons::rpc::{Listener, Rpc};
-use rpg_commons::rpc::audio_server::AudioServer;
-use rpg_commons::spotify::Spotify;
-use rpg_commons::void::Void;
 
 #[tokio_main]
 async fn main() {

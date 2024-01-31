@@ -4,4 +4,10 @@ version = "0.0.1"
 edition = "2021"
 
 [dependencies]
+cxx = "1.0.115"
+cxx-qt = "0.6.0"
+cxx-qt-lib = "0.6.0"
 rpg-commons = { path = "../rpg-commons" }
+
+[build-dependencies]
+cxx-qt-build = { version = "0.6.0", features = ["link_qt_object_files"] }

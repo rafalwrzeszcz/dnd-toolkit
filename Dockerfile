@@ -7,7 +7,14 @@ RUN apt-get update && \
         libgtk-4-1 \
         libgtk-4-dev \
         libprotobuf-dev \
-        protobuf-compiler
+        protobuf-compiler \
+        qml6-module-qtqml-workerscript \
+        qml6-module-qtquick \
+        qml6-module-qtquick-controls \
+        qml6-module-qtquick-templates \
+        qml6-module-qtquick-window \
+        qt6-base-dev \
+        qt6-declarative-dev
 
 # cleanup
 RUN apt-get clean && \

@@ -3,6 +3,7 @@ members = [
     "rpg-cli",
     "rpg-commons",
     "rpg-dioxus",
+    "rpg-flutter",
     "rpg-gtk",
     "rpg-mobile",
     "rpg-qt",

@@ -14,7 +14,6 @@ workspace:
 server
 cli interface (+repl?)
 web interface (yew, dioxus)
-native device display (qt?, gtk?)
 mobile app
 +commons
 tauri? instead of grpc? additionally?

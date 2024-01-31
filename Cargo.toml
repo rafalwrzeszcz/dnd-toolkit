@@ -6,7 +6,6 @@ members = [
     "rpg-flutter",
     "rpg-gtk",
     "rpg-mobile",
-    "rpg-qt",
     "rpg-server",
     "rpg-yew",
 ]

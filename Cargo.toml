@@ -2,7 +2,10 @@
 members = [
     "rpg-cli",
     "rpg-commons",
-    "rpg-dioxus",
+    "rpg-dioxus-cli",
+    "rpg-dioxus-desktop",
+    "rpg-dioxus-mobile",
+    "rpg-dioxus-web",
     "rpg-flutter",
     "rpg-gtk",
     "rpg-mobile",

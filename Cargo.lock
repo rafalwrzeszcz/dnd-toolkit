@@ -1303,7 +1303,28 @@ dependencies = [
 ]
 
 [[package]]
-name = "rpg-dioxus"
+name = "rpg-dioxus-cli"
+version = "0.0.1"
+dependencies = [
+ "rpg-commons",
+]
+
+[[package]]
+name = "rpg-dioxus-desktop"
+version = "0.0.1"
+dependencies = [
+ "rpg-commons",
+]
+
+[[package]]
+name = "rpg-dioxus-mobile"
+version = "0.0.1"
+dependencies = [
+ "rpg-commons",
+]
+
+[[package]]
+name = "rpg-dioxus-web"
 version = "0.0.1"
 dependencies = [
  "rpg-commons",

@@ -41,6 +41,8 @@ async fn main() {
     let rpc = config.rpc.map(|rpc_config| {
         let handler = Listener::new(audio.clone());
         Server::builder()
+
+            .accept_http1(true)
             .add_service(AudioServer::new(handler))
             .serve_with_shutdown(rpc_config.listen, async { drop(receiver.await) })
     });

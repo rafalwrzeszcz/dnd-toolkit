@@ -1,6 +1,25 @@
+cargo-features = ["per-package-target"]
+
 [package]
 name = "rpg-yew"
 version = "0.0.1"
 edition = "2021"
+#forced-target = "wasm32-unknown-unknown"
 
 [dependencies]
+async-trait = "0.1.74"
+chrono = { version = "0.4.31", default-features = false, features = ["clock"] }
+futures = "0.3.30"
+prost = "0.12.3"
+serde = { version = "1.0.193", features = ["derive"] }
+serde_json = "1.0.108"
+thiserror = "1.0.50"
+tokio = "1.36.0"
+tonic = { version = "0.10.2", default-features = false, features = ["codegen", "prost"] }
+tonic-web-wasm-client = "0.5.0"
+tracing = "0.1.40"
+tracing-subscriber = "0.3.18"
+yew = { version = "0.21.0", features = ["csr"] }
+
+[build-dependencies]
+tonic-build = { version = "0.10.2", default-features = false, features = ["prost"] }

@@ -3,3 +3,4 @@
 cobertura.xml
 *.profraw
 coverage.lcov
+dist/

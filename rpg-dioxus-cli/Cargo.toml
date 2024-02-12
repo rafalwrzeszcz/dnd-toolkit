@@ -4,4 +4,11 @@ version = "0.0.1"
 edition = "2021"
 
 [dependencies]
+chrono = { version = "0.4.31", default-features = false, features = ["clock"] }
+dioxus = "0.4.3"
+dioxus-html = "0.4.3"
+dioxus-tui = "0.4.3"
 rpg-commons = { path = "../rpg-commons" }
+tokio = { version = "1.35.1", features = ["macros", "rt-multi-thread"] }
+tracing = "0.1.40"
+tracing-subscriber = "0.3.18"

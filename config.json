@@ -4,7 +4,8 @@
         "name": "Rafał Wrzeszcz"
     },
     "audio": {
-        "type": "Spotify"
+        "type": "Rpc",
+        "url": "http://127.0.0.1:50051/"
     },
     "rpc": {
         "listen": "0.0.0.0:50051"

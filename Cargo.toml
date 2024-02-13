@@ -8,7 +8,6 @@ members = [
     "rpg-dioxus-web",
     "rpg-flutter",
     "rpg-gtk",
-    "rpg-mobile",
     "rpg-server",
     "rpg-yew",
 ]

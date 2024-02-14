@@ -1,5 +1,7 @@
 /* TODO:
 
+update Makefile for mobile and web
+
 tests (config, rpc, audio)
 
 campaign
@@ -16,8 +18,6 @@ dioxus
     mobile
     cli
 web interface (yew)
-flutter ui
-mobile app
 tauri? instead of grpc? additionally?
 
 audio - chromecast (spotify app ID: CC32E753 - https://github.com/azasypkin/rust-caster & https://github.com/aartek/spotify-chromecast-player)

@@ -1,10 +1,22 @@
 FROM rafalwrzeszczwrzasqpl/build-rust:nightly-v0.2.0
 
 ARG TRUNK_VERSION=0.18.8
+ARG CARGO_APK_VERSION=0.10.0
+ARG CARGO_MOBILE2_REV=f251416feaca39e831076e9fb84c87d77b15c4ee
 
 # install additional Rust components
-RUN rustup target add wasm32-unknown-unknown
+RUN rustup target add \
+    aarch64-linux-android \
+    aarch64-apple-ios \
+    aarch64-apple-ios-sim \
+    armv7-linux-androideabi \
+    i686-linux-android \
+    x86_64-apple-ios \
+    x86_64-linux-android \
+    wasm32-unknown-unknown
 RUN cargo install trunk --version ${TRUNK_VERSION}
+RUN cargo install cargo-apk --version ${CARGO_APK_VERSION}
+RUN cargo install --git https://github.com/tauri-apps/cargo-mobile2#${CARGO_MOBILE2_REV}
 
 # install required software from Debian repositories
 RUN apt-get update && \

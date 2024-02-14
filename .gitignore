@@ -4,3 +4,5 @@ cobertura.xml
 *.profraw
 coverage.lcov
 dist/
+rpg-dioxus-mobile/.cargo
+rpg-dioxus-mobile/gen

@@ -19,6 +19,7 @@ dioxus
     cli
 web interface (yew)
 tauri? instead of grpc? additionally?
+unify cli, repl (and dioxus ui?)
 
 audio - chromecast (spotify app ID: CC32E753 - https://github.com/azasypkin/rust-caster & https://github.com/aartek/spotify-chromecast-player)
 map

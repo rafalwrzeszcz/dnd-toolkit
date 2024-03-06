@@ -1,4 +1,4 @@
-use crate::audio::{Audio, AudioError};
+use rpg_core::audio::{Audio, AudioError};
 use async_trait::async_trait;
 use dbus::channel::Sender;
 use dbus::message::Message;

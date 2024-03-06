@@ -1,20 +1,23 @@
 use std::sync::Arc;
 use chrono::NaiveDate;
-use dioxus::core::{Element, Scope};
+use dioxus::core::{Element, fc_to_builder, Scope};
 use dioxus::core_macro::{component, render};
-use dioxus::hooks::use_future;
+use dioxus::hooks::{use_future, use_shared_state_provider};
 use dioxus_tui::launch;
 use dioxus_html as dioxus_elements;
 use dioxus_html::onclick;
 use tokio::main as tokio_main;
 use tracing::info;
 use tracing_subscriber::fmt::init;
-use rpg_commons::audio::Audio;
-use rpg_commons::config::{AudioConfig, load_from_file};
-use rpg_commons::game::Game;
-use rpg_commons::rpc::Rpc;
-use rpg_commons::spotify::Spotify;
-use rpg_commons::void::Void;
+use rpg_commons_dioxus::context::AppContext;
+use rpg_commons_dioxus::ui::AudioPlayButton;
+use rpg_commons_native::config::load_from_file;
+use rpg_commons_native::rpc::Rpc;
+use rpg_commons_native::spotify::Spotify;
+use rpg_core::audio::Audio;
+use rpg_core::config::AudioConfig;
+use rpg_core::game::Game;
+use rpg_core::void::Void;
 
 fn app(cx: Scope) -> Element {
     let audio = use_future(cx, (), |_| async move {
@@ -40,20 +43,10 @@ fn app(cx: Scope) -> Element {
         audio
     });
 
-    render!(div {
-        button {
-            onclick: move |_| {
-                let audio = audio.value().unwrap().clone(); // TODO
+    use_shared_state_provider(cx, || AppContext { audio: audio.value().unwrap().clone() });
 
-                cx.spawn(async move {
-                    audio
-                        .play("spotify:user:1188797644:playlist:7BkG8gSv69wibGNU2imRMx".into())
-                        .await
-                        .unwrap();
-                });
-            },
-            "▶"
-        }
+    render!(AudioPlayButton {
+        track: "spotify:user:1188797644:playlist:7BkG8gSv69wibGNU2imRMx".into(),
     })
 }
 

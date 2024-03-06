@@ -5,7 +5,7 @@ use tonic::transport::{Channel, Error as TonicError};
 use tonic::{include_proto, Request, Response, Status};
 use tracing::{error, info_span, Instrument};
 
-use crate::audio::{Audio, AudioError};
+use rpg_core::audio::{Audio, AudioError};
 
 include_proto!("rpg");
 

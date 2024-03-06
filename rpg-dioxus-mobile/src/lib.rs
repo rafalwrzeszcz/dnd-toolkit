@@ -1,27 +1,25 @@
-mod audio;
 mod config;
-mod game;
 mod rpc;
-mod void;
-
-// TODO: unify wasm, mobile and other packages in rpg-commons, figure out way to handle differences with feature toggles
 
 use std::sync::Arc;
 use anyhow::Result;
 use chrono::NaiveDate;
-use dioxus::core::{Element, Scope};
+use dioxus::core::{Element, fc_to_builder, Scope};
 use dioxus::core_macro::render;
+use dioxus::hooks::use_shared_state_provider;
 use dioxus_desktop::{Config, launch_with_props};
 use dioxus_html as dioxus_elements;
 use log::info;
+use rpg_commons_dioxus::context::AppContext;
+use rpg_commons_dioxus::ui::AudioPlayButton;
+use rpg_core::audio::Audio;
+use rpg_core::config::{AudioConfig, Config as RpgConfig, GameMasterConfig};
+use rpg_core::game::Game;
+use rpg_core::void::Void;
+use tokio::main as tokio_main;
 #[cfg(target_os = "android")]
 use wry::android_binding;
-use tokio::main as tokio_main;
-use crate::audio::Audio;
-use crate::config::{AudioConfig, Config as RpgConfig, GameMasterConfig};
-use crate::game::Game;
 use crate::rpc::Rpc;
-use crate::void::Void;
 
 #[cfg(target_os = "android")]
 fn init_logging() {
@@ -68,20 +66,10 @@ struct AppProps {
 }
 
 fn app(cx: Scope<AppProps>) -> Element {
-    render!(div {
-        button {
-            onclick: move |_| {
-                let audio = cx.props.audio.clone();
+    use_shared_state_provider(cx, || AppContext { audio: cx.props.audio.clone() });
 
-                cx.spawn(async move {
-                    audio
-                        .play("spotify:user:1188797644:playlist:7BkG8gSv69wibGNU2imRMx".into())
-                        .await
-                        .unwrap();
-                });
-            },
-            "▶"
-        }
+    render!(AudioPlayButton {
+        track: "spotify:user:1188797644:playlist:7BkG8gSv69wibGNU2imRMx".into(),
     })
 }
 
@@ -114,6 +102,7 @@ pub async fn main() -> Result<()> {
     let audio: Arc<dyn Audio + Send + Sync + 'static> = match config.audio {
         AudioConfig::Void => Arc::new(Void {}),
         AudioConfig::Rpc { url } => Arc::new(Rpc::new(url).await.unwrap()), // TODO
+        AudioConfig::Spotify => panic!("Spotify D-Bus client not available on mobile."), // TODO
     };
 
     launch_with_props(

@@ -1,0 +1,9 @@
+[package]
+name = "rpg-commons-dioxus"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+dioxus = "0.4.3"
+dioxus-html = "0.4.3"
+rpg-core = { path = "../rpg-core" }

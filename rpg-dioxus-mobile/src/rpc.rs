@@ -1,11 +1,10 @@
 use async_trait::async_trait;
+use rpg_core::audio::{Audio, AudioError};
 use std::sync::Arc;
 use tokio::sync::Mutex;
 use tonic::transport::{Channel, Error as TonicError};
 use tonic::{include_proto, Request, Response, Status};
 use tracing::{error, info_span, Instrument};
-
-use crate::audio::{Audio, AudioError};
 
 include_proto!("rpg");
 

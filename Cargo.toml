@@ -1,7 +1,10 @@
 [workspace]
 members = [
     "rpg-cli",
-    "rpg-commons",
+    "rpg-commons-dioxus",
+    "rpg-commons-native",
+    "rpg-commons-wasm",
+    "rpg-core",
     "rpg-dioxus-cli",
     "rpg-dioxus-desktop",
     "rpg-dioxus-mobile",

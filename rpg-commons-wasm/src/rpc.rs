@@ -1,11 +1,10 @@
 use async_trait::async_trait;
 use futures::executor::block_on;
+use rpg_core::audio::{Audio, AudioError};
 use tokio::sync::Mutex;
 use tonic::{include_proto, Request};
 use tonic_web_wasm_client::Client;
 use tracing::{error, info_span, Instrument};
-
-use crate::audio::{Audio, AudioError};
 
 include_proto!("rpg");
 

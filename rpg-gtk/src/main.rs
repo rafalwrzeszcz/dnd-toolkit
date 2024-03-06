@@ -4,16 +4,17 @@ use gtk4::glib::ExitCode;
 use gtk4::prelude::{ApplicationExt, ApplicationExtManual};
 use gtk4::traits::{ButtonExt, GtkWindowExt, WidgetExt};
 use gtk4::{Application, ApplicationWindow, Button};
-use rpg_commons::audio::Audio;
-use rpg_commons::config::{load_from_file, AudioConfig};
-use rpg_commons::game::Game;
-use rpg_commons::rpc::Rpc;
-use rpg_commons::spotify::Spotify;
-use rpg_commons::void::Void;
+use rpg_commons_native::config::load_from_file;
+use rpg_commons_native::rpc::Rpc;
+use rpg_commons_native::spotify::Spotify;
+use rpg_core::audio::Audio;
+use rpg_core::game::Game;
+use rpg_core::void::Void;
 use std::sync::Arc;
 use tokio::main as tokio_main;
 use tracing::info;
 use tracing_subscriber::fmt::init;
+use rpg_core::config::AudioConfig;
 
 #[tokio_main]
 async fn main() -> ExitCode {

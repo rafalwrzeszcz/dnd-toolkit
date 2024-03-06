@@ -1,23 +1,16 @@
-mod audio;
-mod config;
-mod game;
-mod rpc;
-mod void;
-
-// TODO: unify wasm and other packages in rpg-commons, figure out way to handle differences with feature toggles
-
 use std::ptr::eq;
 use std::sync::Arc;
 use chrono::NaiveDate;
+use rpg_commons_wasm::config::load_from_file;
+use rpg_commons_wasm::rpc::Rpc;
+use rpg_core::audio::Audio;
+use rpg_core::config::{AudioConfig, Config, GameMasterConfig};
+use rpg_core::game::Game;
+use rpg_core::void::Void;
 use tracing::info;
 use tracing_subscriber::fmt::init;
 use yew::{function_component, Html, html, Properties, props, Renderer};
 use yew::platform::spawn_local;
-use crate::audio::Audio;
-use crate::config::{AudioConfig, Config, GameMasterConfig, load_from_file};
-use crate::game::Game;
-use crate::rpc::Rpc;
-use crate::void::Void;
 
 #[derive(Properties)]
 pub struct AppProps {
@@ -26,7 +19,7 @@ pub struct AppProps {
 
 impl PartialEq for AppProps {
     fn eq(&self, other: &Self) -> bool {
-        eq(self as *const _, other as *const _)
+        eq(self.audio.as_ref() as *const _, other.audio.as_ref() as *const _)
     }
 }
 
@@ -78,6 +71,7 @@ fn main() {
     let audio: Arc<dyn Audio + Send + Sync + 'static> = match config.audio {
         AudioConfig::Void => Arc::new(Void {}),
         AudioConfig::Rpc { url } => Arc::new(Rpc::new(url)),
+        AudioConfig::Spotify => panic!("Spotify D-Bus client not available in wasm."), // TODO
     };
 
     Renderer::<App>::with_props(props! {

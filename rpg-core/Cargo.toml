@@ -1,0 +1,9 @@
+[package]
+name = "rpg-core"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+async-trait = "0.1.77"
+chrono = { version = "0.4.34", default-features = false, features = ["clock"] }
+serde = { version = "1.0.197", features = ["derive"] }

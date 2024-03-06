@@ -1,4 +1,4 @@
-FROM rafalwrzeszczwrzasqpl/build-rust:nightly-v0.2.0
+FROM rafalwrzeszczwrzasqpl/build-rust:nightly-v0.2.1
 
 ARG TRUNK_VERSION=0.18.8
 ARG CARGO_APK_VERSION=0.10.0

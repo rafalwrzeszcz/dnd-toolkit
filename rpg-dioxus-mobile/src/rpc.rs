@@ -1,10 +1,10 @@
 use async_trait::async_trait;
 use rpg_core::audio::{Audio, AudioError};
-use std::sync::Arc;
 use tokio::sync::Mutex;
 use tonic::transport::{Channel, Error as TonicError};
 use tonic::{include_proto, Request, Response, Status};
 use tracing::{error, info_span, Instrument};
+use rpg_core::context::AppContext;
 
 include_proto!("rpg");
 
@@ -51,24 +51,8 @@ impl Audio for Rpc {
 
 // service side
 
-/// gRPC listener that forwards accepted calls to underlying subystems locally.
-pub struct Listener {
-    audio: Arc<dyn Audio + Send + Sync + 'static>,
-}
-
-impl Listener {
-    /// Constructs RPC handler by specifying underlying local systems.
-    ///
-    /// # Arguments
-    ///
-    /// * `audio` - Local audio subsystem handler.
-    pub fn new(audio: Arc<dyn Audio + Send + Sync + 'static>) -> Self {
-        Self { audio }
-    }
-}
-
 #[async_trait]
-impl audio_server::Audio for Listener {
+impl audio_server::Audio for AppContext {
     async fn play(&self, request: Request<PlayRequest>) -> Result<Response<PlayResponse>, Status> {
         let request = request.into_inner();
 

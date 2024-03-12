@@ -1,7 +1,6 @@
 use std::ptr::eq;
 use std::sync::Arc;
 use chrono::NaiveDate;
-use rpg_commons_wasm::config::load_from_file;
 use rpg_commons_wasm::rpc::Rpc;
 use rpg_core::audio::Audio;
 use rpg_core::config::{AudioConfig, Config, GameMasterConfig};
@@ -46,7 +45,7 @@ fn app(props: &AppProps) -> Html {
 fn main() {
     // TODO: init();
 
-    // TODO: let config = load_from_file("config.json".into()).unwrap(); // TODO: config path from param, with default fallback
+    // TODO: load from server request
     let config = Config {
         party_name: "Wesoła Kompanija".to_string(),
         game_master: GameMasterConfig {

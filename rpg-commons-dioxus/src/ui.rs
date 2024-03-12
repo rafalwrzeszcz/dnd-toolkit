@@ -1,10 +1,8 @@
-use std::sync::Arc;
 use dioxus::core::{Element, Scope};
 use dioxus::core_macro::{component, Props, render};
 use dioxus::hooks::use_shared_state;
 use dioxus_html as dioxus_elements;
-use rpg_core::audio::Audio;
-use crate::context::AppContext;
+use rpg_core::context::AppContext;
 
 #[component]
 pub fn AudioPlayButton(cx: Scope, track: String) -> Element {
@@ -13,7 +11,7 @@ pub fn AudioPlayButton(cx: Scope, track: String) -> Element {
     render!(div {
         button {
             onclick: move |_| {
-                let audio = app_context.unwrap().read().audio.clone(); // TODO
+                let audio = app_context.unwrap().read().audio.clone(); // TODO: custom use_audio hook
                 let track = track.clone();
 
                 cx.spawn(async move {

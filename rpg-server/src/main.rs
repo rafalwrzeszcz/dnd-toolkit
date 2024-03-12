@@ -1,7 +1,7 @@
 use chrono::naive::NaiveDate;
 use rpg_commons_native::config::load_from_file;
 use rpg_commons_native::rpc::audio_server::AudioServer;
-use rpg_commons_native::rpc::{Listener, Rpc};
+use rpg_commons_native::rpc::Rpc;
 use rpg_commons_native::spotify::Spotify;
 use rpg_core::audio::Audio;
 use rpg_core::game::Game;
@@ -13,6 +13,7 @@ use tonic::transport::Server;
 use tracing::info;
 use tracing_subscriber::fmt::init;
 use rpg_core::config::AudioConfig;
+use rpg_core::context::AppContext;
 
 #[tokio_main]
 async fn main() {
@@ -40,9 +41,8 @@ async fn main() {
 
     // rpc-server
     let rpc = config.rpc.map(|rpc_config| {
-        let handler = Listener::new(audio.clone());
+        let handler = AppContext { audio: audio.clone() };
         Server::builder()
-
             .accept_http1(true)
             .add_service(AudioServer::new(handler))
             .serve_with_shutdown(rpc_config.listen, async { drop(receiver.await) })

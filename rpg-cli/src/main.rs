@@ -4,6 +4,7 @@ use rpg_commons_native::rpc::Rpc;
 use rpg_commons_native::spotify::Spotify;
 use rpg_core::audio::Audio;
 use rpg_core::config::AudioConfig;
+use rpg_core::context::AppContext;
 use rpg_core::game::Game;
 use rpg_core::void::Void;
 use std::sync::Arc;
@@ -18,16 +19,12 @@ const CMD_AUDIO_PLAY: &str = "audio:play";
 
 const ARG_TRACK: &str = "track";
 
-struct ReplContext {
-    audio: Arc<dyn Audio + Send + Sync + 'static>,
-}
-
-async fn play_audio(args: ArgMatches, ctx: &mut ReplContext) -> Result<Option<String>> {
+async fn play_audio(args: ArgMatches, ctx: &mut AppContext) -> Result<Option<String>> {
     let track = args.get_one::<String>(ARG_TRACK).unwrap().to_string();
     ctx.audio
         .play(track)
         .await
-        .unwrap(); // TODO
+        .unwrap(); // TODO (dedicated error type)
 
     Ok(None)
 }
@@ -54,7 +51,7 @@ async fn main() -> Result<()> {
         AudioConfig::Rpc { url } => Arc::new(Rpc::new(url).await.unwrap()), // TODO
     };
 
-    let mut context = ReplContext {
+    let mut context = AppContext {
         audio,
     };
 

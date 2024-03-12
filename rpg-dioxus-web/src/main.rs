@@ -1,4 +1,3 @@
-use std::ptr::eq;
 use std::sync::Arc;
 use chrono::NaiveDate;
 use dioxus::core::{Element, fc_to_builder, Scope};
@@ -6,22 +5,17 @@ use dioxus::core_macro::render;
 use dioxus::hooks::use_shared_state_provider;
 use dioxus_html as dioxus_elements;
 use dioxus_web::{Config, launch_with_props};
-use rpg_commons_dioxus::context::AppContext;
 use rpg_commons_dioxus::ui::AudioPlayButton;
-use rpg_commons_wasm::config::load_from_file;
 use rpg_commons_wasm::rpc::Rpc;
 use rpg_core::audio::Audio;
 use rpg_core::config::{AudioConfig, Config as RpgConfig, GameMasterConfig};
+use rpg_core::context::AppContext;
 use rpg_core::game::Game;
 use rpg_core::void::Void;
 use tracing::info;
 use tracing_subscriber::fmt::init;
 
-struct AppProps {
-    audio: Arc<dyn Audio + Send + Sync + 'static>,
-}
-
-fn app(cx: Scope<AppProps>) -> Element {
+fn app(cx: Scope<AppContext>) -> Element {
     use_shared_state_provider(cx, || AppContext { audio: cx.props.audio.clone() });
 
     render!(AudioPlayButton {
@@ -33,7 +27,7 @@ fn app(cx: Scope<AppProps>) -> Element {
 fn main() {
     // TODO: init();
 
-    // TODO: let config = load_from_file("config.json".into()).unwrap(); // TODO: config path from param, with default fallback
+    // TODO: load from server request
     let config = RpgConfig {
         party_name: "Wesoła Kompanija".to_string(),
         game_master: GameMasterConfig {
@@ -61,5 +55,5 @@ fn main() {
         AudioConfig::Spotify => panic!("Spotify D-Bus client not available in wasm."), // TODO
     };
 
-    launch_with_props(app, AppProps { audio }, Config::default());
+    launch_with_props(app, AppContext { audio }, Config::default());
 }

@@ -10,7 +10,17 @@ player
 character
 
 workspace:
-unify cli, server and dioxus-cli; yew and dioxus-web
+unify cli, server and dioxus-cli
+
+module | local (in-code) | active (listening) | passive (client) | logging
+--- | --- | --- | --- | ---
+cli | ✓ | TODO | ✓ | ✓
+dioxus-cli | ✓ | TODO | ✓ | ✓
+dioxus-desktop | ✓ | TODO | ✓ | ✓
+dioxus-mobile | TODO | TODO | TODO | TODO
+dioxus-web | TODO | TODO | TODO | TODO
+gtk | ✓ | TODO | ✓ | ✓
+server | ✓ | ✓ | ✓ | ✓
 
 audio - chromecast (spotify app ID: CC32E753 - https://github.com/azasypkin/rust-caster & https://github.com/aartek/spotify-chromecast-player)
 audio - html5 audio player
@@ -24,8 +34,6 @@ npc
 initiative list
 propagating game state between nodes instead of copying config file
 websockets for wasm as "reverse passive"
-
-ensure each platform has option to receive message
 */
 
 pub mod audio;

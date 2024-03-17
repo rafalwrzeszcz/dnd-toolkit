@@ -4,7 +4,6 @@ version = "0.0.1"
 edition = "2021"
 
 [dependencies]
-async-trait = "0.1.74"
 chrono = { version = "0.4.31", default-features = false, features = ["clock"] }
 clap = { version = "4.5.0", features = ["cargo"] }
 dbus = "0.9.7"

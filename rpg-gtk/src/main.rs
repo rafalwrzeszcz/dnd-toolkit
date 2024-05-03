@@ -4,17 +4,19 @@ use gtk4::glib::ExitCode;
 use gtk4::prelude::{ApplicationExt, ApplicationExtManual};
 use gtk4::traits::{ButtonExt, GtkWindowExt, WidgetExt};
 use gtk4::{Application, ApplicationWindow, Button};
+use rpg_commons_native::blebox::BleBox;
 use rpg_commons_native::config::load_from_file;
 use rpg_commons_native::rpc::Rpc;
 use rpg_commons_native::spotify::Spotify;
 use rpg_core::audio::Audio;
+use rpg_core::config::{AudioConfig, LightsConfig};
 use rpg_core::game::Game;
+use rpg_core::lights::Lights;
 use rpg_core::void::Void;
 use std::sync::Arc;
 use tokio::main as tokio_main;
 use tracing::info;
 use tracing_subscriber::fmt::init;
-use rpg_core::config::AudioConfig;
 
 #[tokio_main]
 async fn main() -> ExitCode {
@@ -36,6 +38,12 @@ async fn main() -> ExitCode {
         AudioConfig::Void => Arc::new(Void {}),
         AudioConfig::Spotify => Arc::new(Spotify::new().unwrap()), // TODO
         AudioConfig::Rpc { url } => Arc::new(Rpc::new(url).await.unwrap()), // TODO
+    };
+
+    let lights: Arc<dyn Lights + Send + Sync + 'static> = match config.lights {
+        LightsConfig::Void => Arc::new(Void {}),
+        LightsConfig::BleBox { host } => Arc::new(BleBox::new(host)), // TODO
+        LightsConfig::Rpc { url } => Arc::new(Rpc::new(url).await.unwrap()), // TODO
     };
 
     let app = Application::builder().application_id("pl.wrzasq.Rpg").build();

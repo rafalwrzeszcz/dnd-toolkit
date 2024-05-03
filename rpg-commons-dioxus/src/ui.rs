@@ -1,5 +1,5 @@
 use dioxus::core::{Element, Scope};
-use dioxus::core_macro::{component, Props, render};
+use dioxus::core_macro::{component, render, Props};
 use dioxus::hooks::use_shared_state;
 use dioxus_html as dioxus_elements;
 use rpg_core::context::AppContext;

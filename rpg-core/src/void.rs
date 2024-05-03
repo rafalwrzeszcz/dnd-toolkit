@@ -1,6 +1,7 @@
 use async_trait::async_trait;
 
 use crate::audio::{Audio, AudioError};
+use crate::lights::{Lights, LightsError};
 
 /// No-op implementation.
 ///
@@ -14,6 +15,14 @@ pub struct Void {}
 #[async_trait]
 impl Audio for Void {
     async fn play(&self, _track: String) -> Result<(), AudioError> {
+        Ok(())
+    }
+}
+
+/// Using this driver for lights will simply result in no reactions to any lights events without any error.
+#[async_trait]
+impl Lights for Void {
+    async fn brightness(&self, _level: i32) -> Result<(), LightsError> {
         Ok(())
     }
 }

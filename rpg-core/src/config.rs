@@ -45,6 +45,44 @@ pub enum AudioConfig {
     Rpc { url: String },
 }
 
+/// Lights sub-system configuration.
+#[derive(Deserialize)]
+#[serde(tag = "type")]
+pub enum LightsConfig {
+    /// No-op, muted implementation [`Void`](crate::void::Void).
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// "audio": {
+    ///     "type": "Void"
+    /// }
+    /// ```
+    Void,
+    /// [`BleBox`](crate::blebox::BleBox) REST API client.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// "audio": {
+    ///     "type": "BleBox",
+    ///     "host": "http://192.168.0.11/"
+    /// }
+    /// ```
+    BleBox { host: String },
+    /// [`gRPC`](crate::rpc::Rpc) implementation.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// "audio": {
+    ///     "type": "Rpc",
+    ///     "url": "http://192.168.0.10:50051/"
+    /// }
+    /// ```
+    Rpc { url: String },
+}
+
 /// RPC daemon sub-system configuration.
 ///
 /// Specifies setup of RPC listener.
@@ -70,6 +108,8 @@ pub struct Config {
     pub game_master: GameMasterConfig,
     /// Audio system configuration.
     pub audio: AudioConfig,
+    /// Lights system configuration.
+    pub lights: LightsConfig,
     /// gRPC daemon specification - if omitted, current node will not start RPC listener.
     pub rpc: Option<RpcConfig>,
 }

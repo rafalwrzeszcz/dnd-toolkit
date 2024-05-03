@@ -1,10 +1,11 @@
 use async_trait::async_trait;
 use rpg_core::audio::{Audio, AudioError};
+use rpg_core::context::AppContext;
+use rpg_core::lights::{Lights, LightsError};
 use tokio::sync::Mutex;
 use tonic::transport::{Channel, Error as TonicError};
 use tonic::{include_proto, Request, Response, Status};
 use tracing::{error, info_span, Instrument};
-use rpg_core::context::AppContext;
 
 include_proto!("rpg");
 
@@ -13,6 +14,7 @@ include_proto!("rpg");
 /// gRPC client that delegates local actions to remote nodes.
 pub struct Rpc {
     audio: Mutex<audio_client::AudioClient<Channel>>,
+    lights: Mutex<lights_client::LightsClient<Channel>>,
 }
 
 impl Rpc {
@@ -23,7 +25,8 @@ impl Rpc {
     /// * `url` - RPC URL to node that will handle audio subsystem.
     pub async fn new(url: String) -> Result<Self, TonicError> {
         Ok(Self {
-            audio: Mutex::new(audio_client::AudioClient::connect(url).await?),
+            audio: Mutex::new(audio_client::AudioClient::connect(url.clone()).await?),
+            lights: Mutex::new(lights_client::LightsClient::connect(url.clone()).await?),
         })
     }
 }
@@ -49,6 +52,27 @@ impl Audio for Rpc {
     }
 }
 
+/// Delegates lights calls to remote node through RPC calls.
+#[async_trait]
+impl Lights for Rpc {
+    async fn brightness(&self, level: i32) -> Result<(), LightsError> {
+        let call = Request::new(BrightnessRequest { level });
+
+        if let Err(status) = self
+            .lights
+            .lock()
+            .await
+            .brightness(call)
+            .instrument(info_span!(target: "lights:rpc", "brightness", "Setting {}", level))
+            .await
+        {
+            error!(target: "lights:rpc", "Brightness operation caused {:?}", status);
+            return Err(LightsError::BrightnessError);
+        }
+        Ok(())
+    }
+}
+
 // service side
 
 #[async_trait]
@@ -64,6 +88,23 @@ impl audio_server::Audio for AppContext {
         {
             Ok(()) => Ok(Response::new(PlayResponse {})),
             Err(error) => Err(Status::internal(format!("Play error: {:?}", error))),
+        }
+    }
+}
+
+#[async_trait]
+impl lights_server::Lights for AppContext {
+    async fn brightness(&self, request: Request<BrightnessRequest>) -> Result<Response<BrightnessResponse>, Status> {
+        let request = request.into_inner();
+
+        match self
+            .lights
+            .brightness(request.level)
+            .instrument(info_span!(target: "rpc:lights", "brightness", "Handling brightness request {}", request.level))
+            .await
+        {
+            Ok(()) => Ok(Response::new(BrightnessResponse {})),
+            Err(error) => Err(Status::internal(format!("Brightness error: {:?}", error))),
         }
     }
 }

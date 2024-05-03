@@ -11,3 +11,13 @@ message PlayRequest {
 }
 
 message PlayResponse {}
+
+service Lights {
+    rpc Brightness (BrightnessRequest) returns (BrightnessResponse);
+}
+
+message BrightnessRequest {
+    int32 level = 1;
+}
+
+message BrightnessResponse {}

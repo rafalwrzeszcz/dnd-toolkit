@@ -1,25 +1,26 @@
 mod config;
 mod rpc;
 
-use std::sync::Arc;
+use crate::rpc::Rpc;
 use anyhow::Result;
 use chrono::NaiveDate;
-use dioxus::core::{Element, fc_to_builder, Scope};
+use dioxus::core::{fc_to_builder, Element, Scope};
 use dioxus::core_macro::render;
 use dioxus::hooks::use_shared_state_provider;
-use dioxus_desktop::{Config, launch_with_props};
+use dioxus_desktop::{launch_with_props, Config};
 use dioxus_html as dioxus_elements;
 use log::info;
 use rpg_commons_dioxus::ui::AudioPlayButton;
 use rpg_core::audio::Audio;
-use rpg_core::config::{AudioConfig, Config as RpgConfig, GameMasterConfig};
+use rpg_core::config::{AudioConfig, Config as RpgConfig, GameMasterConfig, LightsConfig};
 use rpg_core::context::AppContext;
 use rpg_core::game::Game;
+use rpg_core::lights::Lights;
 use rpg_core::void::Void;
+use std::sync::Arc;
 use tokio::main as tokio_main;
 #[cfg(target_os = "android")]
 use wry::android_binding;
-use crate::rpc::Rpc;
 
 #[cfg(target_os = "android")]
 fn init_logging() {
@@ -62,7 +63,10 @@ pub extern "C" fn start_app() {
 }
 
 fn app(cx: Scope<AppContext>) -> Element {
-    use_shared_state_provider(cx, || AppContext { audio: cx.props.audio.clone() });
+    use_shared_state_provider(cx, || AppContext {
+        audio: cx.props.audio.clone(),
+        lights: cx.props.lights.clone(),
+    });
 
     render!(AudioPlayButton {
         track: "spotify:user:1188797644:playlist:7BkG8gSv69wibGNU2imRMx".into(),
@@ -80,6 +84,9 @@ pub async fn main() -> Result<()> {
             name: "Rafał Wrzeszcz".to_string(),
         },
         audio: AudioConfig::Rpc {
+            url: "http://10.0.2.2:50051".to_string(),
+        },
+        lights: LightsConfig::Rpc {
             url: "http://10.0.2.2:50051".to_string(),
         },
         rpc: None,
@@ -101,9 +108,15 @@ pub async fn main() -> Result<()> {
         AudioConfig::Spotify => panic!("Spotify D-Bus client not available on mobile."), // TODO
     };
 
+    let lights: Arc<dyn Lights + Send + Sync + 'static> = match config.lights {
+        LightsConfig::Void => Arc::new(Void {}),
+        LightsConfig::Rpc { url } => Arc::new(Rpc::new(url).await.unwrap()), // TODO
+        LightsConfig::BleBox { host: _ } => panic!("BleBox REST client not available on mobile."), // TODO
+    };
+
     launch_with_props(
         app,
-        AppContext { audio },
+        AppContext { audio, lights },
         Config::default().with_custom_index(r#"<!DOCTYPE html>
         <html>
           <head>

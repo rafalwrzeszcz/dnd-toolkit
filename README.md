@@ -22,6 +22,8 @@ integrate existing software solutions/services not to write low-level replacemen
 
 - Audio playback control using various.
     - Spotify;
+- Lights control.
+    - BleBox;
 - multi-node setup possible using gRPC;
 - configuration via JSON file.
 
@@ -46,6 +48,10 @@ command-line argument can be expected). Here is example structure of configurati
     },
     "audio": {
         "type": "Spotify"
+    },
+    "lights": {
+        "type": "BleBox",
+        "host": "192.168.0.10"
     }
 }
 ```
@@ -55,6 +61,10 @@ command-line argument can be expected). Here is example structure of configurati
 Currently only implemented handler for audio subsystem is `Spotify`. It uses D-Bus to send playback requests to local
 **Spotify** client. You need to have it installed and running for the driver to make any effect - otherwise it will not
 fail, but just send messages that will not be handled by any consumer, thus make no effect.
+
+## Lights
+
+Currently only implemented handler for lights subsystem is `BleBox`. Lights controls are limited to brightness level.
 
 ## gRPC setup
 

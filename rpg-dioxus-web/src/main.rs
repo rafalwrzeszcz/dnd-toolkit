@@ -1,30 +1,33 @@
 mod rpc;
 
-use std::sync::Arc;
+use crate::rpc::Rpc;
 use chrono::NaiveDate;
-use dioxus::core::{Element, fc_to_builder, Scope};
+use dioxus::core::{fc_to_builder, Element, Scope};
 use dioxus::core_macro::render;
 use dioxus::hooks::use_shared_state_provider;
 use dioxus_html as dioxus_elements;
-use dioxus_web::{Config, launch_with_props};
+use dioxus_web::{launch_with_props, Config};
 use rpg_commons_dioxus::ui::AudioPlayButton;
 use rpg_core::audio::Audio;
-use rpg_core::config::{AudioConfig, Config as RpgConfig, GameMasterConfig};
+use rpg_core::config::{AudioConfig, Config as RpgConfig, GameMasterConfig, LightsConfig};
 use rpg_core::context::AppContext;
 use rpg_core::game::Game;
+use rpg_core::lights::Lights;
 use rpg_core::void::Void;
+use std::sync::Arc;
 use tracing::info;
 use tracing_subscriber::fmt::init;
-use crate::rpc::Rpc;
 
 fn app(cx: Scope<AppContext>) -> Element {
-    use_shared_state_provider(cx, || AppContext { audio: cx.props.audio.clone() });
+    use_shared_state_provider(cx, || AppContext {
+        audio: cx.props.audio.clone(),
+        lights: cx.props.lights.clone(),
+    });
 
     render!(AudioPlayButton {
         track: "spotify:user:1188797644:playlist:7BkG8gSv69wibGNU2imRMx".into(),
     })
 }
-
 
 fn main() {
     // TODO: init();
@@ -36,6 +39,9 @@ fn main() {
             name: "Rafał Wrzeszcz".to_string(),
         },
         audio: AudioConfig::Rpc {
+            url: "http://127.0.0.1:50051".to_string(),
+        },
+        lights: LightsConfig::Rpc {
             url: "http://127.0.0.1:50051".to_string(),
         },
         rpc: None,
@@ -57,5 +63,11 @@ fn main() {
         AudioConfig::Spotify => panic!("Spotify D-Bus client not available in wasm."), // TODO
     };
 
-    launch_with_props(app, AppContext { audio }, Config::default());
+    let lights: Arc<dyn Lights + Send + Sync + 'static> = match config.lights {
+        LightsConfig::Void => Arc::new(Void {}),
+        LightsConfig::Rpc { url } => Arc::new(Rpc::new(url)), // TODO
+        LightsConfig::BleBox { host: _ } => panic!("BleBox REST client not available on mobile."), // TODO
+    };
+
+    launch_with_props(app, AppContext { audio, lights }, Config::default());
 }

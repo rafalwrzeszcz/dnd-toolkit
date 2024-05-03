@@ -2,7 +2,7 @@
 
 update Makefile for mobile and web
 
-tests (config, rpc, audio)
+tests (config, rpc, audio, lights)
 
 campaign
 game session objects
@@ -24,6 +24,7 @@ server | ✓ | ✓ | ✓ | ✓
 
 audio - chromecast (spotify app ID: CC32E753 - https://github.com/azasypkin/rust-caster & https://github.com/aartek/spotify-chromecast-player)
 audio - html5 audio player
+audio - tabletop audio picker ui
 map
 tokens
 log
@@ -40,4 +41,5 @@ pub mod audio;
 pub mod config;
 pub mod context;
 pub mod game;
+pub mod lights;
 pub mod void;

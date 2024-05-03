@@ -1,5 +1,5 @@
-use chrono::NaiveDate;
 use crate::config::GameMasterConfig;
+use chrono::NaiveDate;
 
 /// Game master metadata.
 pub struct GameMaster {

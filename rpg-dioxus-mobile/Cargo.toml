@@ -32,22 +32,22 @@ WRY_ANDROID_KOTLIN_FILES_OUT_DIR = "<android-project-dir>/app/src/main/kotlin/pl
 frameworks = [ "WebKit" ]
 
 [dependencies]
-anyhow = "1.0.56"
-async-trait = "0.1.74"
-chrono = { version = "0.4.31", default-features = false, features = ["clock"] }
+anyhow = "1.0.82"
+async-trait = "0.1.80"
+chrono = { version = "0.4.38", default-features = false, features = ["clock"] }
 dioxus = "0.4.3"
 dioxus-desktop = { version = "0.4.3", default-features = false, features = ["tokio_runtime"] }
 dioxus-html = "0.4.3"
 futures = "0.3.30"
-log = "0.4.11"
-prost = "0.12.3"
+log = "0.4.21"
+prost = "0.12.4"
 rpg-commons-dioxus = { path = "../rpg-commons-dioxus" }
 rpg-core = { path = "../rpg-core" }
-serde = { version = "1.0.193", features = ["derive"] }
-serde_json = "1.0.108"
-thiserror = "1.0.50"
-tokio = "1.36.0"
-tonic = { version = "0.10.2" }
+serde = { version = "1.0.200", features = ["derive"] }
+serde_json = "1.0.116"
+thiserror = "1.0.59"
+tokio = "1.37.0"
+tonic = { version = "0.11.0" }
 tracing = "0.1.40"
 tracing-subscriber = "0.3.18"
 wry = "0.28.0"

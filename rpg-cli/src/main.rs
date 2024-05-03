@@ -87,8 +87,8 @@ async fn main() -> Result<()> {
         .get_matches();
 
     match command.subcommand() {
-        Some((CMD_AUDIO_PLAY, &ref args)) => play_audio(args.clone(), &mut context).await.map(|_| ()),
-        Some((CMD_LIGHTS_BRIGHTNESS, &ref args)) => lights_brightness(args.clone(), &mut context).await.map(|_| ()),
+        Some((CMD_AUDIO_PLAY, args)) => play_audio(args.clone(), &mut context).await.map(|_| ()),
+        Some((CMD_LIGHTS_BRIGHTNESS, args)) => lights_brightness(args.clone(), &mut context).await.map(|_| ()),
         Some(_) => Ok(()), // TODO: print help
         // fallback to REPL interface
         None => {

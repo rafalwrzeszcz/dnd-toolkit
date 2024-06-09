@@ -4,11 +4,8 @@ members = [
     "rpg-commons-dioxus",
     "rpg-commons-native",
     "rpg-core",
-    "rpg-dioxus-cli",
     "rpg-dioxus-desktop",
-    "rpg-dioxus-mobile",
     "rpg-dioxus-web",
-    "rpg-gtk",
     "rpg-server",
 ]
 resolver = "2"

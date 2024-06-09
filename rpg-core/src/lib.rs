@@ -10,22 +10,19 @@ player
 character
 
 workspace:
-unify cli, server and dioxus-cli
+unify cli and server
 
 module | local (in-code) | active (listening) | passive (client) | logging
 --- | --- | --- | --- | ---
 cli | ✓ | TODO | ✓ | ✓
-dioxus-cli | ✓ | TODO | ✓ | ✓
 dioxus-desktop | ✓ | TODO | ✓ | ✓
-dioxus-mobile | TODO | TODO | TODO | TODO
 dioxus-web | TODO | TODO | TODO | TODO
-gtk | ✓ | TODO | ✓ | ✓
 server | ✓ | ✓ | ✓ | ✓
 
 audio - chromecast (spotify app ID: CC32E753 - https://github.com/azasypkin/rust-caster & https://github.com/aartek/spotify-chromecast-player)
 audio - html5 audio player
 audio - tabletop audio picker ui
-map
+map (grid, generate through AI)
 tokens
 log
 script

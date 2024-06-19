@@ -1,10 +1,10 @@
+use crate::audio::{Audio, AudioError};
 use async_trait::async_trait;
 use dbus::channel::Sender;
 use dbus::message::Message;
 use dbus::nonblock::SyncConnection;
 use dbus::Error as DbusError;
 use dbus_tokio::connection::new_session_sync;
-use rpg_core::audio::{Audio, AudioError};
 use std::sync::Arc;
 use tokio::spawn;
 use tracing::{error, info};

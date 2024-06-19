@@ -8,8 +8,6 @@ chrono = { version = "0.4.38", default-features = false, features = ["clock"] }
 dioxus = "0.4.3"
 dioxus-desktop = "0.4.3"
 dioxus-html = "0.4.3"
-rpg-commons-dioxus = { path = "../rpg-commons-dioxus" }
-rpg-commons-native = { path = "../rpg-commons-native" }
 rpg-core = { path = "../rpg-core" }
 tokio = { version = "1.37.0", features = ["macros", "rt-multi-thread"] }
 tracing = "0.1.40"

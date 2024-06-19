@@ -1,7 +1,5 @@
 /* TODO:
 
-update Makefile for mobile and web
-
 tests (config, rpc, audio, lights)
 
 campaign
@@ -10,13 +8,12 @@ player
 character
 
 workspace:
-unify cli and server
+include server in every component, as all are now native
 
 module | local (in-code) | active (listening) | passive (client) | logging
 --- | --- | --- | --- | ---
 cli | ✓ | TODO | ✓ | ✓
 dioxus-desktop | ✓ | TODO | ✓ | ✓
-dioxus-web | TODO | TODO | TODO | TODO
 server | ✓ | ✓ | ✓ | ✓
 
 audio - chromecast (spotify app ID: CC32E753 - https://github.com/azasypkin/rust-caster & https://github.com/aartek/spotify-chromecast-player)
@@ -35,8 +32,11 @@ websockets for wasm as "reverse passive"
 */
 
 pub mod audio;
+pub mod blebox;
 pub mod config;
 pub mod context;
 pub mod game;
 pub mod lights;
+pub mod rpc;
+pub mod spotify;
 pub mod void;

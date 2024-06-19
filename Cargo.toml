@@ -1,11 +1,8 @@
 [workspace]
 members = [
     "rpg-cli",
-    "rpg-commons-dioxus",
-    "rpg-commons-native",
     "rpg-core",
     "rpg-dioxus-desktop",
-    "rpg-dioxus-web",
     "rpg-server",
 ]
 resolver = "2"

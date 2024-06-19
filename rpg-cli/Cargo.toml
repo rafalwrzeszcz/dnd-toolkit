@@ -10,7 +10,6 @@ dbus = "0.9.7"
 dbus-tokio = "0.7.6"
 prost = "0.12.4"
 reedline-repl-rs = { version = "1.1.1", features = ["async"] }
-rpg-commons-native = { path = "../rpg-commons-native" }
 rpg-core = { path = "../rpg-core" }
 serde = { version = "1.0.200", features = ["derive"] }
 serde_json = "1.0.116"

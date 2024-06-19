@@ -1,6 +1,6 @@
+use crate::lights::{Lights, LightsError};
 use async_trait::async_trait;
 use reqwest::Client;
-use rpg_core::lights::{Lights, LightsError};
 use serde_json::json;
 use tracing::info;
 

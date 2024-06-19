@@ -1,19 +1,21 @@
+mod ui;
+
+use crate::ui::AudioPlayButton;
 use chrono::NaiveDate;
 use dioxus::core::{fc_to_builder, Element, Scope};
 use dioxus::core_macro::{component, render};
 use dioxus::hooks::use_shared_state_provider;
 use dioxus_desktop::{launch_with_props, Config};
 use dioxus_html as dioxus_elements;
-use rpg_commons_dioxus::ui::AudioPlayButton;
-use rpg_commons_native::blebox::BleBox;
-use rpg_commons_native::config::load_from_file;
-use rpg_commons_native::rpc::Rpc;
-use rpg_commons_native::spotify::Spotify;
 use rpg_core::audio::Audio;
+use rpg_core::blebox::BleBox;
+use rpg_core::config::load_from_file;
 use rpg_core::config::{AudioConfig, LightsConfig};
 use rpg_core::context::AppContext;
 use rpg_core::game::Game;
 use rpg_core::lights::Lights;
+use rpg_core::rpc::Rpc;
+use rpg_core::spotify::Spotify;
 use rpg_core::void::Void;
 use std::sync::Arc;
 use tokio::main as tokio_main;

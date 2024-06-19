@@ -1,7 +1,7 @@
+use crate::audio::{Audio, AudioError};
+use crate::context::AppContext;
+use crate::lights::{Lights, LightsError};
 use async_trait::async_trait;
-use rpg_core::audio::{Audio, AudioError};
-use rpg_core::context::AppContext;
-use rpg_core::lights::{Lights, LightsError};
 use tokio::sync::Mutex;
 use tonic::transport::{Channel, Error as TonicError};
 use tonic::{include_proto, Request, Response, Status};

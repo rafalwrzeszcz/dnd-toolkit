@@ -3,7 +3,6 @@ use serde_json::{from_reader, Error as SerdeError};
 use std::fmt::{Debug, Display, Formatter, Result as FmtResult};
 use std::fs::File;
 use std::io::Error as IoError;
-use std::net::SocketAddr;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -49,17 +48,6 @@ pub enum AudioConfig {
     /// }
     /// ```
     Spotify,
-    /// [`gRPC`](crate::rpc::Rpc) implementation.
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// "audio": {
-    ///     "type": "Rpc",
-    ///     "url": "http://192.168.0.10:50051/"
-    /// }
-    /// ```
-    Rpc { url: String },
 }
 
 /// Lights sub-system configuration.
@@ -87,33 +75,6 @@ pub enum LightsConfig {
     /// }
     /// ```
     BleBox { host: String },
-    /// [`gRPC`](crate::rpc::Rpc) implementation.
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// "audio": {
-    ///     "type": "Rpc",
-    ///     "url": "http://192.168.0.10:50051/"
-    /// }
-    /// ```
-    Rpc { url: String },
-}
-
-/// RPC daemon sub-system configuration.
-///
-/// Specifies setup of RPC listener.
-///
-/// # Example
-///
-/// ```
-/// "rpc": {
-///     "listen": "127.0.0.1:50051"
-/// }
-/// ```
-#[derive(Deserialize)]
-pub struct RpcConfig {
-    pub listen: SocketAddr,
 }
 
 /// Overall system configuration structure. It contains all sub-systems configurations.
@@ -127,8 +88,6 @@ pub struct Config {
     pub audio: AudioConfig,
     /// Lights system configuration.
     pub lights: LightsConfig,
-    /// gRPC daemon specification - if omitted, current node will not start RPC listener.
-    pub rpc: Option<RpcConfig>,
 }
 
 /// Loads configuration from specified JSON configuration file.

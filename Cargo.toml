@@ -3,7 +3,6 @@ members = [
     "rpg-cli",
     "rpg-core",
     "rpg-dioxus-desktop",
-    "rpg-server",
 ]
 resolver = "2"
 

@@ -14,7 +14,6 @@ use rpg_core::config::{AudioConfig, LightsConfig};
 use rpg_core::context::AppContext;
 use rpg_core::game::Game;
 use rpg_core::lights::Lights;
-use rpg_core::rpc::Rpc;
 use rpg_core::spotify::Spotify;
 use rpg_core::void::Void;
 use std::sync::Arc;
@@ -52,13 +51,11 @@ async fn main() {
     let audio: Arc<dyn Audio + Send + Sync + 'static> = match config.audio {
         AudioConfig::Void => Arc::new(Void {}),
         AudioConfig::Spotify => Arc::new(Spotify::new().unwrap()), // TODO
-        AudioConfig::Rpc { url } => Arc::new(Rpc::new(url).await.unwrap()), // TODO
     };
 
     let lights: Arc<dyn Lights + Send + Sync + 'static> = match config.lights {
         LightsConfig::Void => Arc::new(Void {}),
         LightsConfig::BleBox { host } => Arc::new(BleBox::new(host)), // TODO
-        LightsConfig::Rpc { url } => Arc::new(Rpc::new(url).await.unwrap()), // TODO
     };
 
     launch_with_props(app, AppContext { audio, lights }, Config::default());

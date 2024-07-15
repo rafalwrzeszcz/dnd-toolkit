@@ -1,15 +1,47 @@
+/* TODO:
+
+tests (config, audio, lights)
+
+campaign
+game session objects
+player
+character
+
+audio - chromecast (spotify app ID: CC32E753 - https://github.com/azasypkin/rust-caster & https://github.com/aartek/spotify-chromecast-player)
+audio - html5 audio player
+audio - tabletop audio picker ui
+map (grid, generate through AI)
+tokens
+log
+script
+scene
+monster
+npc
+initiative list
+separate app config from game session config
+*/
+
+mod audio;
+mod blebox;
+mod config;
+mod context;
+mod game;
+mod lights;
+mod spotify;
+mod void;
+
+use crate::audio::Audio;
+use crate::blebox::BleBox;
+use crate::config::{load_from_file, AudioConfig, LightsConfig};
+use crate::context::AppContext;
+use crate::game::Game;
+use crate::lights::Lights;
+use crate::spotify::Spotify;
+use crate::void::Void;
 use chrono::naive::NaiveDate;
 use clap::{crate_authors, crate_name, crate_version, value_parser};
 use reedline_repl_rs::clap::{Arg, ArgMatches, Command};
 use reedline_repl_rs::{Repl, Result};
-use rpg_core::audio::Audio;
-use rpg_core::blebox::BleBox;
-use rpg_core::config::{load_from_file, AudioConfig, LightsConfig};
-use rpg_core::context::AppContext;
-use rpg_core::game::Game;
-use rpg_core::lights::Lights;
-use rpg_core::spotify::Spotify;
-use rpg_core::void::Void;
 use std::sync::Arc;
 use tokio::main as tokio_main;
 use tracing::info;

@@ -18,7 +18,7 @@ scene
 monster
 npc
 initiative list
-separate app config from game session config
+duration counters
 
 bring back #1dd1504-#2a2aaa8
 */
@@ -87,9 +87,37 @@ async fn lights_brightness(args: ArgMatches, ctx: &mut AppContext) -> Result<Opt
 #[error(transparent)]
 enum AppError {
     Repl(#[from] ReplError),
+    Init(#[from] InitError),
     Audio(#[from] AudioError),
     Lights(#[from] LightsError),
-    Spotify(#[from] SpotifyError),
+}
+
+#[derive(Error, Debug)]
+#[error(transparent)]
+pub enum InitError {
+    Spotify(#[from] SpotifyError)
+}
+
+impl TryFrom<AudioConfig> for Arc<dyn Audio + Send + Sync + 'static> {
+    type Error = InitError;
+
+    fn try_from(config: AudioConfig) -> Result<Self, Self::Error> {
+        Ok(match config {
+            AudioConfig::Void => Arc::new(Void {}),
+            AudioConfig::Spotify => Arc::new(Spotify::new()?),
+        })
+    }
+}
+
+impl TryFrom<LightsConfig> for Arc<dyn Lights + Send + Sync + 'static> {
+    type Error = InitError;
+
+    fn try_from(config: LightsConfig) -> Result<Self, Self::Error> {
+        Ok(match config {
+            LightsConfig::Void => Arc::new(Void {}),
+            LightsConfig::BleBox { host } => Arc::new(BleBox::new(host)),
+        })
+    }
 }
 
 #[tokio_main]
@@ -109,15 +137,8 @@ async fn main() -> Result<(), AppError> {
     info!("{}", game.date);
     info!("{}", game.game_master.name);
 
-    let audio: Arc<dyn Audio + Send + Sync + 'static> = match system_config.audio {
-        AudioConfig::Void => Arc::new(Void {}),
-        AudioConfig::Spotify => Arc::new(Spotify::new()?),
-    };
-
-    let lights: Arc<dyn Lights + Send + Sync + 'static> = match system_config.lights {
-        LightsConfig::Void => Arc::new(Void {}),
-        LightsConfig::BleBox { host } => Arc::new(BleBox::new(host)),
-    };
+    let audio: Arc<dyn Audio + Send + Sync + 'static> = system_config.audio.try_into()?;
+    let lights: Arc<dyn Lights + Send + Sync + 'static> = system_config.lights.try_into()?;
 
     let mut context = AppContext { audio, lights };
 

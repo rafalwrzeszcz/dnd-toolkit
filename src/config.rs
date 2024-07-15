@@ -1,20 +1,16 @@
+use serde::de::DeserializeOwned;
 use serde::Deserialize;
 use serde_json::{from_reader, Error as SerdeError};
-use std::fmt::{Debug, Display, Formatter, Result as FmtResult};
+use std::fmt::Debug;
 use std::fs::File;
 use std::io::Error as IoError;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
+#[error(transparent)]
 pub enum ConfigError {
     Io(#[from] IoError),
     Serde(#[from] SerdeError),
-}
-
-impl Display for ConfigError {
-    fn fmt(&self, formatter: &mut Formatter<'_>) -> FmtResult {
-        write!(formatter, "{self:?}")
-    }
 }
 
 /// Game Master identification / description.
@@ -79,15 +75,20 @@ pub enum LightsConfig {
 
 /// Overall system configuration structure. It contains all sub-systems configurations.
 #[derive(Deserialize)]
-pub struct Config {
-    /// Name of the game party.
-    pub party_name: String,
-    /// Game Master definition.
-    pub game_master: GameMasterConfig,
+pub struct SystemConfig {
     /// Audio system configuration.
     pub audio: AudioConfig,
     /// Lights system configuration.
     pub lights: LightsConfig,
+}
+
+/// Game configuration structure. It contains all sub-systems configurations.
+#[derive(Deserialize)]
+pub struct GameConfig {
+    /// Name of the game party.
+    pub party_name: String,
+    /// Game Master definition.
+    pub game_master: GameMasterConfig,
 }
 
 /// Loads configuration from specified JSON configuration file.
@@ -99,9 +100,9 @@ pub struct Config {
 /// # Example
 ///
 /// ```
-/// let config = load_from_file("config.json".into())?;
+/// let config: SystemConfig = load_from_file("config.json".into())?;
 /// ```
-pub fn load_from_file(path: String) -> Result<Config, ConfigError> {
+pub fn load_from_file<ConfigType: DeserializeOwned>(path: String) -> Result<ConfigType, ConfigError> {
     let file = File::open(path)?;
 
     Ok(from_reader(&file)?)

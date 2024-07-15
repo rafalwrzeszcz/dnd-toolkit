@@ -1,13 +1,15 @@
 use async_trait::async_trait;
+use thiserror::Error;
 
-#[derive(Debug)]
+#[derive(Error, Debug)]
 pub enum AudioError {
+    #[error("Could not play track.")]
     PlayError,
 }
 
 /// Audio controlling aspect.
 ///
-/// This trait exposes methods for controlling audio playback. Media reference is assumed to be a string refering to
+/// This trait exposes methods for controlling audio playback. Media reference is assumed to be a string referring to
 /// particular media - handling of that reference will depend on particular implementation (please see README for
 /// general concepts).
 #[async_trait]

@@ -1,7 +1,9 @@
 use async_trait::async_trait;
+use thiserror::Error;
 
-#[derive(Debug)]
+#[derive(Error, Debug)]
 pub enum LightsError {
+    #[error("Could not set lights brightness.")]
     BrightnessError,
 }
 

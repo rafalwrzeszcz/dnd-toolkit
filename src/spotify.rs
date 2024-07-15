@@ -6,11 +6,18 @@ use dbus::nonblock::SyncConnection;
 use dbus::Error as DbusError;
 use dbus_tokio::connection::new_session_sync;
 use std::sync::Arc;
+use thiserror::Error;
 use tokio::spawn;
 use tracing::{error, info};
 
 pub struct Spotify {
     dbus: Arc<SyncConnection>,
+}
+
+#[derive(Error, Debug)]
+pub enum SpotifyError {
+    #[error(transparent)]
+    DBus(#[from] DbusError),
 }
 
 /// Spotify handler over D-Bus.
@@ -21,7 +28,7 @@ pub struct Spotify {
 /// handled successfully. If there is no Spotify app running on the same D-Bus bus to consume messages it will just
 /// continue to work with no effect.
 impl Spotify {
-    pub fn new() -> Result<Self, DbusError> {
+    pub fn new() -> Result<Self, SpotifyError> {
         let (resource, conn) = new_session_sync()?;
 
         spawn(async {
